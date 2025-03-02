@@ -14,11 +14,14 @@ pipeline {
             }
         }
         stage('Setup Node.js') {
-            script {
-                def nodeInstalled = sh(script: 'node -v', returnStatus: true) == 0
-                    if (!nodeInstalled) {
-                        error "Node.js is not installed on this machine."
-                    }
+            steps {
+
+                script {
+                    def nodeInstalled = sh(script: 'node -v', returnStatus: true) == 0
+                        if (!nodeInstalled) {
+                            error "Node.js is not installed on this machine."
+                        }
+                }
             }
         }
         stage('Install Dependencies') {
