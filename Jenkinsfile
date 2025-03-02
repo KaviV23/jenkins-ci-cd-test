@@ -1,35 +1,57 @@
 pipeline {
     agent any 
+
+    environment {
+        NODE_VERSION = '22'
+        BUILD_DIR = 'dist'
+        DEPLOY_DIR = '/srv/cicdtest/jenkins'
+    }
+
     stages {
-        stage('Static Analysis') {
+        stage('Checkout') {
             steps {
-                echo 'Run the static analysis to the code' 
+                git 'https://github.com/KaviV23/jenkins-ci-cd-test'
             }
         }
-        stage('Compile') {
-            steps {
-                echo 'Compile the source code' 
+        stage('Setup Node.js') {
+            script {
+                def nodeInstalled = sh(script: 'node -v', returnStatus: true) == 0
+                    if (!nodeInstalled) {
+                        error "Node.js is not installed on this machine."
+                    }
             }
         }
-        stage('Security Check') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Run the security check against the application' 
+                sh 'npm install'
             }
         }
-        stage('Run Unit Tests') {
+        stage('Build Project') {
             steps {
-                echo 'Run unit tests from the source code' 
+                sh 'npm run build'
             }
         }
-        stage('Run Integration Tests') {
+        stage('Deploy') {
             steps {
-                echo 'Run only crucial integration tests from the source code' 
+                script {
+                    sh "rm -rf ${DEPLOY_DIR}/*"
+                    sh "cp -r ${BUILD_DIR}/* ${DEPLOY_DIR}/"
+                }
             }
         }
         stage('Publish Artifacts') {
             steps {
                 echo 'Save the assemblies generated from the compilation' 
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment Successful!'
+        }
+        failure {
+            echo 'Deployment Failed!'
         }
     }
 }
