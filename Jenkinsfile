@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/KaviV23/jenkins-ci-cd-test'
+                git branch: 'main', url: 'https://github.com/KaviV23/jenkins-ci-cd-test'
             }
         }
         stage('Setup Node.js') {
