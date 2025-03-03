@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Establish SSH connection') {
             steps {
-                sh "ssh -f ~/.ssh/id_rsa.pub ${DEPLOY_USER}:${DEPLOY_HOST}"
+                sh "ssh -i ~/.ssh/id_rsa.pub ${DEPLOY_USER}:${DEPLOY_HOST}"
             }
         }
         stage('Set up Node') {
