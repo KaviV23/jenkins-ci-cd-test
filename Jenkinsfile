@@ -30,7 +30,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    ssh DEPLOY_DIR@DEPLOY_HOST
+                    ssh "${DEPLOY_DIR}@${DEPLOY_HOST}"
                     sh "rm -rf ${DEPLOY_DIR}/*"
                     sh "exit"
                     sh "scp ${BUILD_DIR} ${DEPLOY_DIR@DEPLOY_HOST}:${DEPLOY_DIR}"
