@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker { 
-            image 'node:22.14.0-alpine3.21' 
-        }
-    }
+    agent any
 
     environment {
         NODE_VERSION = '22'
@@ -19,7 +15,12 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/KaviV23/jenkins-ci-cd-test'
             }
         }
-        stage('Install Dependencies') {
+        stage('Establish SSH connection') {
+            steps {
+                sh "ssh -f ~/.ssh/id_rsa.pub ${DEPLOY_USER}:${DEPLOY_HOST}"
+            }
+        }
+        stage('Set up Node') {
             steps {
                 sh 'npm install'
             }
